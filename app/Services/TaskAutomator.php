@@ -23,7 +23,6 @@ class TaskAutomator
     public function handle(array $request): void
     {
 
-        $type = $request['type'];
         $status = $request['status'];
         $for = $request['for'];
         $email_to = $request['user_email'];

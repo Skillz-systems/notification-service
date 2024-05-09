@@ -41,6 +41,18 @@ class TaskService
         return $task->delete();
     }
 
+    public function getTasksByUserId(int $userId)
+    {
+        return Task::where('user_id', $userId)->get();
+    }
+
+    public function getTasksByUserIdAndStatus($userId, $status)
+    {
+        return Task::where('user_id', $userId)
+            ->where('status', $status)
+            ->get();
+    }
+
     private function validateUpdateData(array $data): array
     {
         $validator = Validator::make($data, [

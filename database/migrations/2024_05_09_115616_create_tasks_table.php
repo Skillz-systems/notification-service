@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->bigInteger('id')->primary();
-            $table->bigInteger('user_id')->primary();
+            $table->bigInteger('user_id');
             $table->string('title');
             $table->enum('for', ['staff', 'customer', 'supplier', 'other'])->defaultValue('staff');
             $table->enum('status', ['visible', 'hidden', 'completed', 'staled'])->default('visible');
