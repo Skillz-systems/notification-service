@@ -22,7 +22,7 @@ class TaskQueueTest extends TestCase
 
         Queue::fake();
 
-        $task = Task::factory()->create();
+        $task = Task::factory(['user_id' => $this->user()->id])->create();
 
         TaskDeleted::dispatch($task->id);
 
@@ -40,6 +40,7 @@ class TaskQueueTest extends TestCase
             "title" => "create DDQ",
             "id" => 1,
             "email" => "test@nnpc.com",
+            'user_id' => $this->user()->id,
         ];
 
         TaskCreated::dispatch($request);
@@ -52,12 +53,13 @@ class TaskQueueTest extends TestCase
     {
         Queue::fake();
 
-        $task = Task::factory()->create();
+        $task = Task::factory(['user_id' => $this->user()->id])->create();
 
         $request = [
             "title" => "updated",
             "id" => $task->id,
             "status" => "completed",
+            'user_id' => $this->user()->id,
         ];
 
         TaskUpdated::dispatch($request);

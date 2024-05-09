@@ -16,7 +16,7 @@ class EmailJobTest extends TestCase
     {
 
         Queue::fake();
-        $email = Task::factory()->create();
+        $email = Task::factory(['user_id' => $this->user()->id])->create();
         EmailJob::dispatch($email->toArray());
         Queue::assertPushed(EmailJob::class, function ($job) use ($email) {
             return $job->getData() == $email->toArray();
