@@ -12,19 +12,29 @@ class TaskUpdated implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * Create a new job instance.
-     */
-    public function __construct()
-    {
-        //
-    }
+    private array $data;
+    private int $id;
 
+    public function __construct(array $data)
+    {
+        $this->data = $data;
+        $this->id = $data['id'];
+    }
     /**
      * Execute the job.
      */
     public function handle(): void
     {
-        //
     }
+
+    public function getData(): array
+    {
+        return $this->data;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
 }

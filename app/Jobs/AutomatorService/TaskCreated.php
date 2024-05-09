@@ -15,9 +15,11 @@ class TaskCreated implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct()
+    private array $data;
+
+    public function __construct(array $data)
     {
-        //
+        $this->data = $data;
     }
 
     /**
@@ -26,5 +28,10 @@ class TaskCreated implements ShouldQueue
     public function handle(): void
     {
         //
+    }
+
+    public function getData(): array
+    {
+        return $this->data;
     }
 }

@@ -12,12 +12,10 @@ class TaskDeleted implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * Create a new job instance.
-     */
-    public function __construct()
+    private int $id;
+    public function __construct($id)
     {
-        //
+        $this->id = $id;
     }
 
     /**
@@ -25,6 +23,11 @@ class TaskDeleted implements ShouldQueue
      */
     public function handle(): void
     {
-        //
+        // this will handle the job delete action
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 }

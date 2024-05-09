@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->bigInteger('user_id')->primary();
             $table->string('title');
             $table->enum('for', ['staff', 'customer', 'supplier', 'other'])->defaultValue('staff');
-            $table->enum('status', ['visible', 'hidden', 'completed', 'stalled'])->default('visible');
+            $table->enum('status', ['visible', 'hidden', 'completed', 'staled'])->default('visible');
             $table->string('content')->nullable();
             $table->string('user_email')->nullable();
             $table->string('url')->nullable();
