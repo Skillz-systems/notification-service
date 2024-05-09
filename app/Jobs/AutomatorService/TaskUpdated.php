@@ -2,11 +2,13 @@
 
 namespace App\Jobs\AutomatorService;
 
+use App\Services\TaskService;
 use Illuminate\Bus\Queueable;
+use App\Services\TaskUpdateService;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 
 class TaskUpdated implements ShouldQueue
 {
@@ -25,6 +27,8 @@ class TaskUpdated implements ShouldQueue
      */
     public function handle(): void
     {
+        $service = new TaskService();
+        $service->update($this->data, $this->id);
     }
 
     public function getData(): array
