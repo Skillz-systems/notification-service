@@ -105,37 +105,33 @@ class TaskServiceTest extends TestCase
     }
 
 
-    // public function test_getTasksByUserId_returns_tasks_for_given_user_id()
-    // {
-    //     $user_id = 1;
-    //     $task = factory(Task::class)->create(['user_id' => $user_id]);
-    //     $task2 = factory(Task::class)->create(['user_id' => $user_id]);
-    //     $task3 = factory(Task::class)->create(['user_id' => 2]);
+    public function test_to_getTasksByUserId_returns_tasks_for_given_user_id()
+    {
 
-    //     $taskService = new TaskService();
-    //     $tasks = $taskService->getTasksByUserId($user_id);
+        Task::factory(['user_id' => $this->user->id])->count(3)->create();
 
-    //     $this->assertEquals(2, $tasks->count());
-    //     $this->assertTrue($tasks->contains($task));
-    //     $this->assertTrue($tasks->contains($task2));
-    //     $this->assertFalse($tasks->contains($task3));
-    // }
+        $tasks = $this->service->getTasksByUserId($this->user->id);
 
-    // public function test_getTasksByUserIdAndStatus_returns_tasks_for_given_user_id_and_status()
-    // {
-    //     $user_id = 1;
-    //     $task = factory(Task::class)->create(['user_id' => $user_id, 'status' => 'completed']);
-    //     $task2 = factory(Task::class)->create(['user_id' => $user_id, 'status' => 'hidden']);
-    //     $task3 = factory(Task::class)->create(['user_id' => 2, 'status' => 'completed']);
+        // Assertions
+        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Collection::class, $tasks);
+        $this->assertEquals(3, $tasks->count());
 
-    //     $taskService = new TaskService();
-    //     $tasks = $taskService->getTasksByUserIdAndStatus($user_id, 'completed');
 
-    //     $this->assertEquals(1, $tasks->count());
-    //     $this->assertTrue($tasks->contains($task));
-    //     $this->assertFalse($tasks->contains($task2));
-    //     $this->assertFalse($tasks->contains($task3));
-    // }
+    }
+
+    public function test_getTasksByUserIdAndStatus_returns_tasks_for_given_user_id_and_status()
+    {
+        $task = Task::factory(['user_id' => $this->user->id, 'status' => 'completed'])->create();
+        $task2 = Task::factory(['user_id' => $this->user->id, 'status' => 'hidden'])->create();
+        $task3 = Task::factory(['user_id' => $this->user->id, 'status' => 'completed'])->create();
+
+        $tasks = $this->service->getTasksByUserIdAndStatus($this->user->id, 'completed');
+
+        $this->assertEquals(2, $tasks->count());
+        $this->assertTrue($tasks->contains($task));
+        $this->assertTrue($tasks->contains($task3));
+        $this->assertFalse($tasks->contains($task2));
+    }
 
     // public function test_getTasksByUserIdAndStatus_returns_empty_array_when_no_tasks_found()
     // {

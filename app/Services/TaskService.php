@@ -5,7 +5,9 @@ namespace App\Services;
 use App\Models\Task;
 
 
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\ValidationException;
 
 
@@ -41,9 +43,13 @@ class TaskService
         return $task->delete();
     }
 
-    public function getTasksByUserId(int $userId)
+    public function getTasksByUserId(int $userId): ?Collection
     {
-        return Task::where('user_id', $userId)->get();
+        // return Task::where('user_id', $userId)->get();
+
+        $user = User::findOrFail($userId);
+        // Retrieve all tasks associated with the user
+        return $user->tasks;
     }
 
     public function getTasksByUserIdAndStatus($userId, $status)
