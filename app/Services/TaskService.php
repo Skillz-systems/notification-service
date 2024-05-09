@@ -25,7 +25,7 @@ class TaskService
 
     }
 
-    public function update(array $request, int $id): ?Task
+    public function update(array $request, int $id): ?bool
     {
 
 
