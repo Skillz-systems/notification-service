@@ -17,7 +17,7 @@ class TaskQueueTest extends TestCase
 
 
 
-    public function test_it_receives_task_created_job_from_automator_services(): void
+    public function test_it_receives_task_created__update_job_from_automator_services(): void
     {
         Queue::fake();
 
@@ -33,5 +33,7 @@ class TaskQueueTest extends TestCase
             return $job->getData() == $request;
         });
     }
+
+
 
 }
