@@ -6,6 +6,7 @@ use App\Models\Task;
 
 
 use App\Services\UserService;
+use App\Services\CustomerService;
 use Illuminate\Support\Facades\Validator;
 use App\Jobs\CommunicationsService\EmailJob;
 
@@ -15,10 +16,12 @@ class TaskAutomator
 {
 
     private $userService;
+    private $customerService;
 
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, CustomerService $customerService)
     {
         $this->userService = $userService;
+        $this->customerService = $customerService;
     }
     public function handle(array $request): void
     {
@@ -31,13 +34,12 @@ class TaskAutomator
         $content = $request['content'];
         $title = $request['title'];
 
-        $user = $this->userService->show($owner_id);
-
         if ($status === 'visible' && $for === 'customer') {
+            $customer = $this->customerService->show($owner_id);
 
             $newArray = [
                 'title' => $title,
-                'receiver_email' => $email_to,
+                'receiver_email' => $email_to ?? $customer->email,
                 'body' => $content,
                 'url' => $url,
                 // 'receiver_name' => $user->name,
@@ -46,7 +48,7 @@ class TaskAutomator
 
         }
         if ($status === 'visible' && $for === 'staff') {
-
+            $user = $this->userService->show($owner_id);
             $newArray = [
                 'title' => $title,
                 'receiver_email' => $email_to,
