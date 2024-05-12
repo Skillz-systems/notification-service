@@ -7,6 +7,7 @@ use App\Models\Task;
 
 use App\Models\User;
 use App\Services\TaskUrlGenerator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\ValidationException;
@@ -57,13 +58,51 @@ class TaskService
         return $task->delete();
     }
 
+    public function getTasksByOwner($ownerId, $perPage = 15)
+    {
+        return Task::where('owner_id', $ownerId)
+            ->whereIn('status', ['visible', 'staled'])
+            ->orderByDesc('created_at')
+            ->paginate($perPage);
+    }
+
+    public function getTasksWithFilters($ownerId, $filters = [], $paginate = 15)
+    {
+        $query = DB::table('tasks')
+            ->where('owner_id', $ownerId)
+            ->whereIn('status', ['visible', 'staled']);
+
+        // Apply filters
+        if (isset($filters['title'])) {
+            $query->where('title', 'like', '%' . $filters['title'] . '%');
+        }
+
+        if (isset($filters['due_at'])) {
+            $query->whereDate('due_at', $filters['due_at']);
+        }
+
+        if (isset($filters['for'])) {
+            $query->where('for', $filters['for']);
+        }
+
+        // Apply sorting
+        $sortColumn = isset($filters['sort_column']) ? $filters['sort_column'] : 'created_at';
+        $sortDirection = isset($filters['sort_direction']) && strtolower($filters['sort_direction']) === 'desc' ? 'desc' : 'asc';
+        $query->orderBy($sortColumn, $sortDirection);
+
+        // Apply pagination
+        if ($paginate > 0) {
+            return $query->paginate($paginate);
+        } else {
+            return $query->get();
+        }
+    }
+
     public function getTasksByUserId(int $userId): ?Collection
     {
-        return Task::where('owner_id', $userId)->get();
 
-        // $user = User::findOrFail($userId);
-        // Retrieve all tasks associated with the user
-        // return $user->tasks;
+
+        return Task::where('owner_id', $userId)->get();
     }
 
     public function getTasksByUserIdAndStatus($userId, $status)
