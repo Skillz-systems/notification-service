@@ -13,23 +13,27 @@ class TaskCreated implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * Create a new job instance.
-     */
     private array $data;
+    private int $id;
+
 
     public function __construct(array $data)
     {
         $this->data = $data;
+        $this->id = $data['id'];
     }
 
-    /**
-     * Execute the job.
-     */
+
     public function handle(): void
     {
         $service = new TaskService();
-        $service->create($this->data);
+        $task = $service->show($this->id);
+
+        if (!$task) {
+            $service->create($this->data);
+        } else {
+            $service->update($this->data, $this->id);
+        }
     }
 
     public function getData(): array
