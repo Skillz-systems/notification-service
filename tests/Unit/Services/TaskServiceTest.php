@@ -78,7 +78,7 @@ class TaskServiceTest extends TestCase
 
     public function test_task_service_destroy_task()
     {
-        $task = Task::factory(['owner_id' => $this->user->id])->create();
+        $task = Task::factory(['owner_id' => $this->user->id, 'for' => 'staff',])->create();
 
         $deleted = $this->service->destroy($task->id);
 
@@ -132,15 +132,42 @@ class TaskServiceTest extends TestCase
         $this->assertFalse($tasks->contains($task2));
     }
 
-    public function testShowReturnsTaskAndPaginatesCorrectly()
+    // public function testShowReturnsTaskAndPaginatesCorrectly()
+    // {
+    //     // Arrange
+    //     $created_tasks = Task::factory(['owner_id' => $this->user->id, 'status' => 'completed'])->count(30)->create();
+    //     $paginate = 20;
+    //     $tasks = $this->service->getTasksByOwner($this->user->id, $paginate);
+    //     // $this->assertInstanceOf(\Illuminate\Database\Eloquent\Collection::class, $tasks);
+    //     $this->assertInstanceOf(TaskCollection::class, $tasks);
+    //     $this->assertEquals($paginate, $tasks->count());
+    // }
+
+    public function test_to_get_tasks_by_owner()
     {
         // Arrange
-        $created_tasks = Task::factory(['owner_id' => $this->user->id, 'status' => 'completed'])->count(30)->create();
-        $paginate = 20;
-        $tasks = $this->service->getTasksByOwner($this->user->id, $paginate);
-        // $this->assertInstanceOf(\Illuminate\Database\Eloquent\Collection::class, $tasks);
-        $this->assertInstanceOf(TaskCollection::class, $tasks);
-        $this->assertEquals($paginate, $tasks->count());
+        $owner1 = User::factory()->create();
+        $owner2 = User::factory()->create();
+
+        $visibleTask1 = Task::factory()->create(['owner_id' => $owner1->id, 'status' => 'visible', 'for' => 'staff']);
+        $visibleTask2 = Task::factory()->create(['owner_id' => $owner1->id, 'status' => 'visible', 'for' => 'staff']);
+        $staledTask = Task::factory()->create(['owner_id' => $owner1->id, 'status' => 'staled', 'for' => 'staff']);
+        $hiddenTask = Task::factory()->create(['owner_id' => $owner1->id, 'status' => 'hidden', 'for' => 'staff']);
+        $otherOwnerTask = Task::factory()->create(['owner_id' => $owner2->id, 'status' => 'visible', 'for' => 'staff']);
+
+        $perPage = 10;
+
+        // Act
+        $tasks = $this->service->getTasksByOwner($owner1->id, $perPage);
+
+        // Assert
+        $this->assertCount(3, $tasks);
+        $this->assertTrue($tasks->contains($visibleTask1));
+        $this->assertTrue($tasks->contains($visibleTask2));
+        $this->assertTrue($tasks->contains($staledTask));
+        $this->assertFalse($tasks->contains($hiddenTask));
+        $this->assertFalse($tasks->contains($otherOwnerTask));
+        $this->assertEquals($perPage, $tasks->perPage());
     }
 
 
