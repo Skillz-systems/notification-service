@@ -25,77 +25,14 @@ class TaskController extends Controller
         $this->service = $taskService;
     }
 
-    /**
-     * @OA\Get(
-     *     path="/tasks/{id}",
-     *     summary="Get a task by ID of staff",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="integer"
-     *         )
-     *     ),
-     *     @OA\Parameter(
-     *         name="paginate",
-     *         in="query",
-     *         required=false,
-     *         @OA\Schema(
-     *             type="integer"
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful operation",
-     *         @OA\JsonContent(ref="#/components/schemas/Task")
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Task not found"
-     *     )
-     * )
-     */
+
     public function show(int $id, int $paginate = 20)
     {
         $tasks = $this->service->getTasksByOwner($id, $paginate);
         return new TaskCollection($tasks);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/tasks/{id}/filter",
-     *     summary="Get tasks with filters",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="integer"
-     *         )
-     *     ),
-     *     @OA\Parameter(
-     *         name="paginate",
-     *         in="query",
-     *         required=false,
-     *         @OA\Schema(
-     *             type="integer"
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful operation",
-     *         @OA\JsonContent(
-     *             type="array",
-     *             @OA\Items(ref="#/components/schemas/Task")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Tasks not found"
-     *     )
-     * )
-     */
+
 
     public function filter(int $id, int $paginate = 20)
     {
