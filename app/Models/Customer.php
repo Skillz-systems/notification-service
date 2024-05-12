@@ -10,4 +10,10 @@ class Customer extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+
+    public function tasks()
+    {
+        return $this->morphMany(Task::class, 'owner');
+    }
 }
