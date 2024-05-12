@@ -25,12 +25,12 @@ class TaskServiceTest extends TestCase
     {
         $request = [
             'id' => 1,
-            'user_id' => 1,
+            'owner_id' => 1,
             'title' => 'Test Task',
             'for' => 'staff',
             'status' => 'visible',
             'content' => 'This is a test task.',
-            'user_email' => 'test@example.com',
+            'owner_email' => 'test@example.com',
             'url' => 'https://test.com',
         ];
 
@@ -42,7 +42,7 @@ class TaskServiceTest extends TestCase
         $this->assertEquals('staff', $task->for);
         $this->assertEquals('visible', $task->status);
         $this->assertEquals('This is a test task.', $task->content);
-        $this->assertEquals('test@example.com', $task->user_email);
+        $this->assertEquals('test@example.com', $task->owner_email);
         $this->assertEquals('https://test.com', $task->url);
     }
 
@@ -52,12 +52,12 @@ class TaskServiceTest extends TestCase
 
         $request = [
             'id' => $task->id,
-            'user_id' => 1,
+            'owner_id' => 1,
             'title' => 'Updated Task',
             'for' => 'customer',
             'status' => 'hidden',
             'content' => 'This is an updated task.',
-            'user_email' => 'test@example.com',
+            'owner_email' => 'test@example.com',
             'url' => 'https://test.com',
         ];
 

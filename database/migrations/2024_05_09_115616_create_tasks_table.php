@@ -15,11 +15,11 @@ return new class extends Migration {
             $table->unsignedBigInteger('owner_id');
             $table->timestamp('due_at')->nullable();
             $table->string('title');
-            // $table->enum('for', ['staff', 'customer', 'supplier', 'other'])->defaultValue('staff');
-            $table->string('owner_type');
+            $table->enum('for', ['staff', 'customer', 'supplier', 'other'])->defaultValue('staff');
+            // $table->string('owner_type');
             $table->enum('status', ['visible', 'hidden', 'completed', 'staled'])->default('visible');
             $table->string('content')->nullable();
-            $table->string('user_email')->nullable();
+            $table->string('owner_email')->nullable();
             $table->string('url')->nullable();
             $table->timestamps();
         });

@@ -20,15 +20,14 @@ class TaskFactory extends Factory
     {
         return [
             'id' => $this->faker->unique()->randomNumber(5, true),
-            'user_email' => $this->faker->email(),
+            'owner_email' => $this->faker->email(),
             'title' => $this->faker->sentence(4),
             'for' => $this->faker->randomElement(['staff', 'customer', 'supplier', 'other']),
-            'status' => $this->faker->randomElement(['visible', 'hidden', 'completed', 'stalled']),
+            'status' => $this->faker->randomElement(['visible', 'hidden', 'completed', 'staled']),
             'content' => $this->faker->paragraph(2),
             'url' => $this->faker->url,
-            'owner_id' => null, // Set this value based on the owner type
-            'owner_type' => $this->getRandomOwnerType(),
-            'due_at' => $this->faker->dateTimeBetween('+1 week', '+1 month'),
+            'owner_id' => $this->faker->randomNumber(5, true),
+            'due_at' => $this->faker->dateTimeBetween('+1 day', '+1 week'),
             // 'created_at' => $faker->dateTimeThisMonth(),
             // 'updated_at' => now(),
 

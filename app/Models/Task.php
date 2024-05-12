@@ -12,8 +12,4 @@ class Task extends Model
     protected $guarded = [];
 
 
-    public function owner()
-    {
-        return $this->morphTo();
-    }
 }
