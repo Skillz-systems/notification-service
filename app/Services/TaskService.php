@@ -43,16 +43,16 @@ class TaskService
 
     public function getTasksByUserId(int $userId): ?Collection
     {
-        // return Task::where('user_id', $userId)->get();
+        return Task::where('owner_id', $userId)->get();
 
-        $user = User::findOrFail($userId);
+        // $user = User::findOrFail($userId);
         // Retrieve all tasks associated with the user
-        return $user->tasks;
+        // return $user->tasks;
     }
 
     public function getTasksByUserIdAndStatus($userId, $status)
     {
-        return Task::where('user_id', $userId)
+        return Task::where('owner_id', $userId)
             ->where('status', $status)
             ->get();
     }

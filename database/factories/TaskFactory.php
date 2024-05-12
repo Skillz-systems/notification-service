@@ -25,7 +25,6 @@ class TaskFactory extends Factory
             'for' => $this->faker->randomElement(['staff', 'customer', 'supplier', 'other']),
             'status' => $this->faker->randomElement(['visible', 'hidden', 'completed', 'staled']),
             'content' => $this->faker->paragraph(2),
-            'user_email' => $this->faker->email(),
             'url' => $this->faker->url,
             'owner_id' => $this->faker->randomNumber(5, true),
             'due_at' => $this->faker->dateTimeBetween('+1 day', '+1 week'),

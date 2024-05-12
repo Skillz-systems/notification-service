@@ -57,11 +57,11 @@ class TaskServiceTest extends TestCase
     public function test_task_service_update_valid_task()
     {
 
-        $task = Task::factory(['user_id' => $this->user->id])->create();
+        $task = Task::factory(['owner_id' => $this->user->id])->create();
 
         $request = [
             'id' => $task->id,
-            'owner_id' => 1,
+            'owner_id' => $this->user->id,
             'title' => 'Updated Task',
             'for' => 'customer',
             'status' => 'hidden',
@@ -78,7 +78,7 @@ class TaskServiceTest extends TestCase
 
     public function test_task_service_destroy_task()
     {
-        $task = Task::factory(['user_id' => $this->user->id])->create();
+        $task = Task::factory(['owner_id' => $this->user->id])->create();
 
         $deleted = $this->service->destroy($task->id);
 
@@ -97,7 +97,7 @@ class TaskServiceTest extends TestCase
             // 'for' => 'staff',
             'status' => 'visible',
             'content' => 'This is a test task.',
-            'user_email' => 'test@example.com',
+            'owner_email' => 'test@example.com',
             'url' => 'https://test.com',
         ];
         $this->service->create($request);
@@ -108,7 +108,7 @@ class TaskServiceTest extends TestCase
     public function test_to_getTasksByUserId_returns_tasks_for_given_user_id()
     {
 
-        Task::factory(['user_id' => $this->user->id])->count(3)->create();
+        Task::factory(['owner_id' => $this->user->id])->count(3)->create();
 
         $tasks = $this->service->getTasksByUserId($this->user->id);
 
@@ -121,9 +121,9 @@ class TaskServiceTest extends TestCase
 
     public function test_getTasksByUserIdAndStatus_returns_tasks_for_given_user_id_and_status()
     {
-        $task = Task::factory(['user_id' => $this->user->id, 'status' => 'completed'])->create();
-        $task2 = Task::factory(['user_id' => $this->user->id, 'status' => 'hidden'])->create();
-        $task3 = Task::factory(['user_id' => $this->user->id, 'status' => 'completed'])->create();
+        $task = Task::factory(['owner_id' => $this->user->id, 'status' => 'completed'])->create();
+        $task2 = Task::factory(['owner_id' => $this->user->id, 'status' => 'hidden'])->create();
+        $task3 = Task::factory(['owner_id' => $this->user->id, 'status' => 'completed'])->create();
 
         $tasks = $this->service->getTasksByUserIdAndStatus($this->user->id, 'completed');
 
