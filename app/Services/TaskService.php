@@ -6,6 +6,7 @@ use App\Models\Task;
 
 
 use App\Models\User;
+use App\Services\TaskUrlGenerator;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\ValidationException;
@@ -13,6 +14,8 @@ use Illuminate\Validation\ValidationException;
 
 class TaskService
 {
+
+
     public function show(int $id): ?Task
     {
         return Task::findOrFail($id);
@@ -21,7 +24,14 @@ class TaskService
     public function create(array $request): ?Task
     {
 
+        $taskUrlGenerator = app()->make(TaskUrlGenerator::class);
+
         $validatedData = $this->validateCreateData($request);
+        $ownerType = $request['for'];
+        $ownerId = $request['owner_id'];
+        $url = $taskUrlGenerator->generateUrl($ownerType, $ownerId);
+        $validatedData['url'] = $url;
+
         $task = Task::create($validatedData);
         return $task;
 
@@ -29,7 +39,13 @@ class TaskService
 
     public function update(array $request, int $id): ?bool
     {
+        $taskUrlGenerator = app()->make(TaskUrlGenerator::class);
+        $ownerType = $request['for'];
+        $ownerId = $request['owner_id'];
+        $url = $taskUrlGenerator->generateUrl($ownerType, $ownerId);
         $validatedData = $this->validateUpdateData($request);
+        $validatedData['url'] = $url;
+
         $task = Task::findOrFail($id);
         return $task->update($validatedData);
 

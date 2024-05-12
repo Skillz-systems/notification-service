@@ -13,9 +13,12 @@ return new class extends Migration {
         Schema::create('tasks', function (Blueprint $table) {
             $table->bigInteger('id')->primary();
             $table->unsignedBigInteger('owner_id');
+            $table->unsignedBigInteger('processflow_id')->nullable();
+            $table->unsignedBigInteger('formbuilder_id')->nullable();
             $table->timestamp('due_at')->nullable();
             $table->string('title');
-            $table->enum('for', ['staff', 'customer', 'supplier', 'other'])->defaultValue('staff');
+            $table->enum('for', ['staff', 'customer'])->defaultValue('staff');
+            // $table->enum('for', ['staff', 'customer', 'supplier', 'other'])->defaultValue('staff');
             // $table->string('owner_type');
             $table->enum('status', ['visible', 'hidden', 'completed', 'staled'])->default('visible');
             $table->string('content')->nullable();

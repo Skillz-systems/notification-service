@@ -51,7 +51,6 @@ class TaskServiceTest extends TestCase
         $this->assertEquals('visible', $task->status);
         $this->assertEquals('This is a test task.', $task->content);
         $this->assertEquals('test@example.com', $task->owner_email);
-        $this->assertEquals('https://test.com', $task->url);
     }
 
     public function test_task_service_update_valid_task()
@@ -108,10 +107,9 @@ class TaskServiceTest extends TestCase
     public function test_to_getTasksByUserId_returns_tasks_for_given_user_id()
     {
 
-        Task::factory(['owner_id' => $this->user->id])->count(3)->create();
+        Task::factory(['owner_id' => $this->user->id, 'for' => 'staff'])->count(3)->create();
 
         $tasks = $this->service->getTasksByUserId($this->user->id);
-
         // Assertions
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Collection::class, $tasks);
         $this->assertEquals(3, $tasks->count());
