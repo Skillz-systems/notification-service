@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Task extends Model
+class Customer extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
 
-    public function owner()
+    public function tasks()
     {
-        return $this->morphTo();
+        return $this->morphMany(Task::class, 'owner');
     }
 }
