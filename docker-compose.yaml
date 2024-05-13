@@ -18,13 +18,13 @@ services:
       dockerfile: Dockerfile
     command: "php artisan queue:work"
     networks:
-      - automator_network
+      - notification_network
 
   mysql:
     image: mariadb:10.5.8
     environment:
       - MYSQL_ROOT_PASSWORD=Ubuxa##99
-      - MYSQL_DATABASE=forge
+      - MYSQL_DATABASE=notification
       - MYSQL_USER=forge
       - MYSQL_PASSWORD=Ubuxa##99
     networks:
