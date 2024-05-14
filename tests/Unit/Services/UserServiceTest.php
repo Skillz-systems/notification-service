@@ -4,10 +4,11 @@ namespace Tests\Unit\Services;
 
 use Tests\TestCase;
 use App\Models\User;
-use App\Services\UserService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
+use App\Services\UserService;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 // use PHPUnit\Framework\TestCase;
 
@@ -101,9 +102,11 @@ class UserServiceTest extends TestCase
 
     public function test_to_validation_fails_on_updating_an_existing_user()
     {
+        // $this->expectException(ModelNotFoundException::class);
         $this->expectException(ValidationException::class);
 
         $user = User::factory()->create([
+            'id' => 40,
             'name' => 'John Doe',
             'email' => 'john@example.com',
         ]);
