@@ -22,11 +22,20 @@ class TaskQueueTest extends TestCase
         Queue::fake();
 
         $request = [
-            "title" => "create DDQ",
-            "id" => 1,
-            "email" => "test@nnpc.com",
+            'id' => 20,
+            'processflow_history_id' => 1,
+            'formbuilder_data_id' => 2,
+            'entity_id' => 3,
+            'entity_type' => 'customer',
+            'user_id' => 4,
+            'processflow_id' => 5,
+            'processflow_step_id' => 6,
+            'title' => 'Create DDQ',
+            'route' => 'https://example.com/create-ddq',
+            'start_time' => '2023-05-15',
+            'end_time' => '2023-05-20',
+            'task_status' => 0,
         ];
-
         TaskCreated::dispatch($request);
 
         Queue::assertPushed(TaskCreated::class, function ($job) use ($request) {

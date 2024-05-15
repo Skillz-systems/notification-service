@@ -35,8 +35,6 @@ class CustomerCreated implements ShouldQueue
             $service->update($this->data, $this->id);
         }
 
-
-
     }
 
     public function getData(): array
