@@ -22,6 +22,7 @@ class TaskQueueTest extends TestCase
         Queue::fake();
 
         $request = [
+            'id' => 20,
             'processflow_history_id' => 1,
             'formbuilder_data_id' => 2,
             'entity_id' => 3,
