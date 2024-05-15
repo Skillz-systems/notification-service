@@ -24,9 +24,4 @@ class User extends Authenticatable
         'id',
     ];
 
-    public function tasks()
-    {
-        return $this->morphMany(Task::class, 'owner');
-    }
-
 }

@@ -11,9 +11,4 @@ class Customer extends Model
 
     protected $guarded = [];
 
-
-    public function tasks()
-    {
-        return $this->morphMany(Task::class, 'owner');
-    }
 }
