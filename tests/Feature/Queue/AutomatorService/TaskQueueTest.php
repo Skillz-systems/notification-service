@@ -17,11 +17,12 @@ class TaskQueueTest extends TestCase
 
 
 
-    public function test_it_receives_task_created_job_from_automator_services(): void
+    public function test_it_receives_task_created__update_job_from_automator_services(): void
     {
         Queue::fake();
 
         $request = [
+            'id' => 20,
             'processflow_history_id' => 1,
             'formbuilder_data_id' => 2,
             'entity_id' => 3,
@@ -41,5 +42,7 @@ class TaskQueueTest extends TestCase
             return $job->getData() == $request;
         });
     }
+
+
 
 }
