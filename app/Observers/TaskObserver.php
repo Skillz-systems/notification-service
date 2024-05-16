@@ -10,24 +10,29 @@ class TaskObserver
 
     protected $taskAutomator;
 
+    // Dependency injection of the TaskAutomator service
     public function __construct(TaskAutomator $taskAutomator)
     {
         $this->taskAutomator = $taskAutomator;
     }
 
 
+    //only run the taskAutomator if the task is 0(false) i.e pending
+
     public function created(Task $task): void
     {
-        if ($task->status === 'visible') {
+        if ($task->task_status === false) {
 
             $this->taskAutomator->handle($task->toArray());
 
         }
     }
 
+    //only run the taskAutomator if the task is 0(false) i.e pending
+
     public function updated(Task $task): void
     {
-        if ($task->status === 'visible') {
+        if ($task->task_status === false) {
             $this->taskAutomator->handle($task->toArray());
         }
     }

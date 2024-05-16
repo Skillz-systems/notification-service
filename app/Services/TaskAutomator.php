@@ -25,41 +25,6 @@ class TaskAutomator
     }
     public function handle(array $request): void
     {
-
-        // $status = $request['status'];
-        // $for = $request['for'];
-        // $email_to = $request['owner_email'];
-        // $owner_id = $request['owner_id'];
-        // $url = $request['url'];
-        // $content = $request['content'];
-        // $title = $request['title'];
-
-        // if ($status === 'visible' && $for === 'customer') {
-        //     $customer = $this->customerService->show($owner_id);
-
-        //     $newArray = [
-        //         'title' => $title,
-        //         'receiver_email' => $email_to ?? $customer->email,
-        //         'body' => $content,
-        //         'url' => $url,
-        //         // 'receiver_name' => $user->name,
-        //     ];
-        //     EmailJob::dispatch($newArray);
-
-        // }
-        // if ($status === 'visible' && $for === 'staff') {
-        //     $user = $this->userService->show($owner_id);
-        //     $newArray = [
-        //         'title' => $title,
-        //         'receiver_email' => $email_to,
-        //         'body' => $content,
-        //         'url' => $url,
-        //         'receiver_name' => $user->name,
-        //     ];
-        //     EmailJob::dispatch($newArray);
-        // }
-
-
         $emailData = $this->prepareEmailData($request);
 
         EmailJob::dispatch($emailData);
@@ -69,34 +34,29 @@ class TaskAutomator
 
     private function prepareEmailData(array $request): array
     {
-        $owner = $this->getOwner($request['for'], $request['owner_id']);
+        $owner = $this->getOwner($request['entity_type'], $request['user_id']);
 
         $emailData = [
+            'type' => $request['entity_type'],
             'title' => $request['title'],
-            'receiver_email' => $request['owner_email'] ?? $owner->email,
-            'body' => $request['content'],
-            'url' => $request['url'],
+            'email' => $owner->email,
+            'route' => $request['route'],
         ];
-
-        if ($request['for'] === 'staff' || $request['for'] === 'supplier') {
-            $emailData['receiver_name'] = $owner->name;
-        }
-
         return $emailData;
     }
 
-    private function getOwner(string $ownerType, int $ownerId): object
+    private function getOwner(string $entityType, int $ownerId): object
     {
-        switch ($ownerType) {
+        switch ($entityType) {
             case 'customer':
-                return $this->customerService->show($ownerId);
+                return $this->userService->show($ownerId);
             case 'staff':
                 return $this->userService->show($ownerId);
             case 'supplier':
                 // change to supplier //FIXME:
                 return $this->userService->show($ownerId);
             default:
-                throw new \InvalidArgumentException("Invalid owner type: $ownerType");
+                throw new \InvalidArgumentException("Invalid owner type: $entityType");
         }
     }
 }

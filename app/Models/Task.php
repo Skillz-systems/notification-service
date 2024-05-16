@@ -14,4 +14,9 @@ class Task extends Model
     protected $guarded = [];
 
 
+    protected $casts = [
+        'task_status' => 'boolean',
+    ];
+
+
 }

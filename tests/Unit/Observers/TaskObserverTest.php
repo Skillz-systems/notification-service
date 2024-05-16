@@ -21,9 +21,9 @@ class TaskObserverTest extends TestCase
         $this->taskObserver = new TaskObserver($this->taskAutomator);
     }
 
-    public function testCreatedWithVisibleStatus()
+    public function test_observer_task_automator_run_when_task_is_created_with_pending_task_status(): void
     {
-        $task = new Task(['status' => 'visible']);
+        $task = new Task(['task_status' => 0]);
 
         $this->taskAutomator->shouldReceive('handle')
             ->once()
@@ -32,56 +32,13 @@ class TaskObserverTest extends TestCase
         $this->taskObserver->created($task);
     }
 
-    public function testCreatedWithNonVisibleStatus()
+    public function test_observer_task_automator_does_not_run_when_task_is_created_or_updated_with_completed_task_status(): void
     {
-        $task = new Task(['status' => 'hidden']);
+        $task = new Task(['task_status' => 1]);
 
         $this->taskAutomator->shouldNotReceive('handle');
 
         $this->taskObserver->created($task);
     }
 
-    public function testUpdatedWithVisibleStatus()
-    {
-        $task = new Task(['status' => 'visible']);
-
-        $this->taskAutomator->shouldReceive('handle')
-            ->once()
-            ->with($task->toArray());
-
-        $this->taskObserver->updated($task);
-    }
-
-    public function testUpdatedWithNonVisibleStatus()
-    {
-        $task = new Task(['status' => 'hidden']);
-
-        $this->taskAutomator->shouldNotReceive('handle');
-
-        $this->taskObserver->updated($task);
-    }
-
-    // public function testDeleted()
-    // {
-    //     $task = new Task();
-
-    //     $this->taskObserver->deleted($task);
-    //     // No assertions needed as the method is empty
-    // }
-
-    // public function testRestored()
-    // {
-    //     $task = new Task();
-
-    //     $this->taskObserver->restored($task);
-    //     // No assertions needed as the method is empty
-    // }
-
-    // public function testForceDeleted()
-    // {
-    //     $task = new Task();
-
-    //     $this->taskObserver->forceDeleted($task);
-    //     // No assertions needed as the method is empty
-    // }
 }

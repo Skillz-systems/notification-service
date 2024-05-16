@@ -19,24 +19,14 @@ class TaskService
     public function create(array $request): ?Task
     {
         $validatedData = $this->validateCreateData($request);
-        $ownerType = $request['for'];
-        $ownerId = $request['owner_id'];
-        $url = $taskUrlGenerator->generateUrl($ownerType, $ownerId);
-        $validatedData['url'] = $url;
-
         $task = Task::create($validatedData);
         return $task;
     }
 
     public function update(array $request, int $id): ?bool
     {
-        $taskUrlGenerator = app()->make(TaskUrlGenerator::class);
-        $ownerType = $request['for'];
-        $ownerId = $request['owner_id'];
-        $url = $taskUrlGenerator->generateUrl($ownerType, $ownerId);
-        $validatedData = $this->validateUpdateData($request);
-        $validatedData['url'] = $url;
 
+        $validatedData = $this->validateUpdateData($request);
         $task = Task::findOrFail($id);
         return $task->update($validatedData);
     }
@@ -49,7 +39,7 @@ class TaskService
 
     public function getTasksByUserId(int $userId): ?Collection
     {
-        return Task::where('owner_id', $userId)->get();
+        return Task::where('user_id', $userId)->get();
 
         // $user = User::findOrFail($userId);
         // Retrieve all tasks associated with the user
@@ -58,7 +48,7 @@ class TaskService
 
     public function getTasksByUserIdAndStatus($userId, $status)
     {
-        return Task::where('owner_id', $userId)
+        return Task::where('user_id', $userId)
             ->where('status', $status)
             ->get();
     }
