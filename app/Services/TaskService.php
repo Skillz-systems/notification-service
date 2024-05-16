@@ -4,10 +4,13 @@ namespace App\Services;
 
 use App\Models\Task;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\ValidationException;
 
 class TaskService
 {
+
+
     public function show(int $id): ?Task
     {
         return Task::findOrFail($id);
@@ -22,6 +25,7 @@ class TaskService
 
     public function update(array $request, int $id): ?bool
     {
+
         $validatedData = $this->validateUpdateData($request);
         $task = Task::findOrFail($id);
         return $task->update($validatedData);
@@ -31,6 +35,22 @@ class TaskService
     {
         $task = $this->show($id);
         return $task->delete();
+    }
+
+    public function getTasksByUserId(int $userId): ?Collection
+    {
+        return Task::where('user_id', $userId)->get();
+
+        // $user = User::findOrFail($userId);
+        // Retrieve all tasks associated with the user
+        // return $user->tasks;
+    }
+
+    public function getTasksByUserIdAndStatus($userId, $status)
+    {
+        return Task::where('user_id', $userId)
+            ->where('status', $status)
+            ->get();
     }
 
     private function validateUpdateData(array $data): array

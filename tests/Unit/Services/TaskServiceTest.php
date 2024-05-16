@@ -2,6 +2,7 @@
 
 use Tests\TestCase;
 use App\Models\Task;
+use App\Models\User;
 use App\Services\TaskService;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Validation\ValidationException;
@@ -13,21 +14,28 @@ class TaskServiceTest extends TestCase
 
     private TaskService $service;
 
+    protected $user;
+
+
+
     protected function setUp(): void
     {
         parent::setUp();
         $this->service = new TaskService();
+        $this->user = User::factory()->create();
     }
 
     public function test_task_service_create_valid_task()
     {
+
+
         $request = [
             'id' => 40,
             'processflow_history_id' => 1,
             'formbuilder_data_id' => 2,
             'entity_id' => 3,
             'entity_type' => 'customer',
-            'user_id' => 4,
+            'user_id' => $this->user->id,
             'processflow_id' => 5,
             'processflow_step_id' => 6,
             'title' => 'Create DDQ',
@@ -44,7 +52,7 @@ class TaskServiceTest extends TestCase
         $this->assertEquals(2, $task->formbuilder_data_id);
         $this->assertEquals(3, $task->entity_id);
         $this->assertEquals('customer', $task->entity_type);
-        $this->assertEquals(4, $task->user_id);
+        $this->assertEquals($this->user->id, $task->user_id);
         $this->assertEquals(5, $task->processflow_id);
         $this->assertEquals(6, $task->processflow_step_id);
         $this->assertEquals('Create DDQ', $task->title);
@@ -56,7 +64,8 @@ class TaskServiceTest extends TestCase
 
     public function test_task_service_update_valid_task()
     {
-        $task = Task::factory()->create();
+
+        $task = Task::factory(['user_id' => $this->user->id])->create();
 
         $request = [
             'id' => $task->id,
@@ -64,7 +73,7 @@ class TaskServiceTest extends TestCase
             'formbuilder_data_id' => 8,
             'entity_id' => 9,
             'entity_type' => 'supplier',
-            'user_id' => 10,
+            'user_id' => $this->user->id,
             'processflow_id' => 11,
             'processflow_step_id' => 12,
             'title' => 'Update DDQ',
@@ -81,7 +90,7 @@ class TaskServiceTest extends TestCase
 
     public function test_task_service_destroy_task()
     {
-        $task = Task::factory()->create();
+        $task = Task::factory(['user_id' => $this->user->id])->create();
         $deleted = $this->service->destroy($task->id);
         $this->assertTrue($deleted);
         $this->assertNull(Task::find($task->id));
