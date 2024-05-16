@@ -25,6 +25,4 @@ class User extends Authenticatable
         'id',
     ];
 
-
-
 }
