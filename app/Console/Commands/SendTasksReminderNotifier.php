@@ -8,6 +8,14 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
+
+
+/**
+ * SendTasksReminderNotifier is a Laravel console command that sends reminders for pending tasks.
+ * It retrieves tasks where the task status is 'PENDING', the start time is at least 8 hours before
+ * the current time, and the end time is greater than or equal to the current time. It then sends
+ * these tasks to the TaskAutomator service for further processing or notification.
+ */
 class SendTasksReminderNotifier extends Command
 {
     /**
@@ -30,20 +38,35 @@ class SendTasksReminderNotifier extends Command
     public function handle()
     {
 
-        $taskAutomator = app()->make(TaskAutomator::class);
+        try {
+            // Resolve the TaskAutomator service from the container
+            $taskAutomator = app()->make(TaskAutomator::class);
+        } catch (BindingResolutionException $e) {
+            // Log the error and display a message if the TaskAutomator service cannot be resolved
+            Log::error('Failed to resolve TaskAutomator: ' . $e->getMessage());
+            $this->error('Failed to resolve TaskAutomator. Check the logs for more details.');
+            return 1;
+        }
 
-        $pendingTasks = Task::where('task_status', 0)
+
+
+        // Retrieve pending tasks where the start time is at least 8 hours before the current time
+        // and the end time is greater than or equal to the current time
+
+        $pendingTasks = Task::where('task_status', Task::PENDING)
             ->whereDate('start_time', '<=', now()->subHours(8))
             ->whereDate('end_time', '>=', now());
 
-
+        // Process the pending tasks in chunks of 100 records
         $pendingTasks->chunk(100, function ($tasks) use ($taskAutomator) {
             foreach ($tasks as $task) {
                 try {
-                    $taskAutomator->handle($task->toArray());
+                    // Send the task to the TaskAutomator service for processing
+                    $taskAutomator->send($task->toArray());
                     $this->info("Sending reminder for task: {$task->title}");
                 } catch (\Exception $e) {
-                    Log::error('Failed to handle task: ' . $task->title . ', Error: ' . $e->getMessage());
+                    // Log and display an error message if an exception occurs while processing the task
+                    Log::error('Failed to handle task: ' . $task->id . $task->title . ', Error: ' . $e->getMessage());
                     $this->error("Failed to handle task: {$task->title}");
                 }
             }

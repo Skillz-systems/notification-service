@@ -23,9 +23,9 @@ class TaskObserverTest extends TestCase
 
     public function test_observer_task_automator_run_when_task_is_created_with_pending_task_status(): void
     {
-        $task = new Task(['task_status' => 0]);
+        $task = new Task(['task_status' => Task::PENDING]);
 
-        $this->taskAutomator->shouldReceive('handle')
+        $this->taskAutomator->shouldReceive('send')
             ->once()
             ->with($task->toArray());
 
@@ -34,9 +34,9 @@ class TaskObserverTest extends TestCase
 
     public function test_observer_task_automator_does_not_run_when_task_is_created_or_updated_with_completed_task_status(): void
     {
-        $task = new Task(['task_status' => 1]);
+        $task = new Task(['task_status' => Task::DONE]);
 
-        $this->taskAutomator->shouldNotReceive('handle');
+        $this->taskAutomator->shouldNotReceive('send');
 
         $this->taskObserver->created($task);
     }

@@ -21,10 +21,8 @@ class TaskObserver
 
     public function created(Task $task): void
     {
-        if ($task->task_status === false) {
-
-            $this->taskAutomator->handle($task->toArray());
-
+        if ($task->task_status === Task::PENDING) {
+            $this->taskAutomator->send($task->toArray());
         }
     }
 
@@ -32,32 +30,8 @@ class TaskObserver
 
     public function updated(Task $task): void
     {
-        if ($task->task_status === false) {
-            $this->taskAutomator->handle($task->toArray());
+        if ($task->task_status === Task::PENDING) {
+            $this->taskAutomator->send($task->toArray());
         }
     }
-
-    /**
-     * Handle the Task "deleted" event.
-     */
-    // public function deleted(Task $task): void
-    // {
-    //     //
-    // }
-
-    // /**
-    //  * Handle the Task "restored" event.
-    //  */
-    // public function restored(Task $task): void
-    // {
-    //     //
-    // }
-
-    // /**
-    //  * Handle the Task "force deleted" event.
-    //  */
-    // public function forceDeleted(Task $task): void
-    // {
-    //     //
-    // }
 }
