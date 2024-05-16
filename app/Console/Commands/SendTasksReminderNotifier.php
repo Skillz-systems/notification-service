@@ -50,12 +50,20 @@ class SendTasksReminderNotifier extends Command
 
 
 
+
         // Retrieve pending tasks where the start time is at least 8 hours before the current time
         // and the end time is greater than or equal to the current time
 
         $pendingTasks = Task::where('task_status', Task::PENDING)
             ->whereDate('start_time', '<=', now()->subHours(8))
             ->whereDate('end_time', '>=', now());
+
+
+        // Check if there are any pending tasks
+        if ($pendingTasks->count() === 0) {
+            $this->info('No pending tasks found.');
+            return 0;
+        }
 
         // Process the pending tasks in chunks of 100 records
         $pendingTasks->chunk(100, function ($tasks) use ($taskAutomator) {
