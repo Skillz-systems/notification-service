@@ -11,12 +11,19 @@ class Task extends Model
 {
     use HasFactory;
 
+    const PENDING = 0;
+    const DONE = 1;
     protected $guarded = [];
 
 
-    protected $casts = [
-        'task_status' => 'boolean',
-    ];
-
+    /**
+     * Get the user associated with the task.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
 }

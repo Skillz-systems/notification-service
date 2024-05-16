@@ -5,59 +5,49 @@ namespace App\Observers;
 use App\Models\Task;
 use App\Services\TaskAutomator;
 
+/**
+ * TaskObserver is an observer class for handling task events.
+ */
 class TaskObserver
 {
-
+    /**
+     * @var TaskAutomator
+     */
     protected $taskAutomator;
 
-    // Dependency injection of the TaskAutomator service
+    /**
+     * Constructor for TaskObserver.
+     *
+     * @param TaskAutomator $taskAutomator
+     */
     public function __construct(TaskAutomator $taskAutomator)
     {
         $this->taskAutomator = $taskAutomator;
     }
 
-
-    //only run the taskAutomator if the task is 0(false) i.e pending
-
+    /**
+     * Handle the Task "created" event.
+     *
+     * @param Task $task
+     * @return void
+     */
     public function created(Task $task): void
     {
-        if ($task->task_status === false) {
-
-            $this->taskAutomator->handle($task->toArray());
-
-        }
-    }
-
-    //only run the taskAutomator if the task is 0(false) i.e pending
-
-    public function updated(Task $task): void
-    {
-        if ($task->task_status === false) {
-            $this->taskAutomator->handle($task->toArray());
+        if ($task->task_status === Task::PENDING) {
+            $this->taskAutomator->send($task->toArray());
         }
     }
 
     /**
-     * Handle the Task "deleted" event.
+     * Handle the Task "updated" event.
+     *
+     * @param Task $task
+     * @return void
      */
-    // public function deleted(Task $task): void
-    // {
-    //     //
-    // }
-
-    // /**
-    //  * Handle the Task "restored" event.
-    //  */
-    // public function restored(Task $task): void
-    // {
-    //     //
-    // }
-
-    // /**
-    //  * Handle the Task "force deleted" event.
-    //  */
-    // public function forceDeleted(Task $task): void
-    // {
-    //     //
-    // }
+    public function updated(Task $task): void
+    {
+        if ($task->task_status === Task::PENDING) {
+            $this->taskAutomator->send($task->toArray());
+        }
+    }
 }
