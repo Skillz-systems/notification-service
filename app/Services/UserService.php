@@ -3,8 +3,6 @@
 namespace App\Services;
 
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -43,15 +41,13 @@ class UserService
     /**
      * Create a new user.
      *
-     * @param Request $request
+     * @param  $request
      * @return \App\Models\User
      * @throws \Illuminate\Validation\ValidationException
      */
     public function create(array $request): User
     {
-        $request['password'] = static::$password ??= Hash::make('password');
         $validatedData = $this->validateUserData($request);
-
         $user = User::create($validatedData);
 
         return $user;
@@ -60,7 +56,7 @@ class UserService
     /**
      * Update an existing user.
      *
-     * @param Request $request
+     * @param  $request
      * @param int $id
      * @return \App\Models\User
      * @throws \Illuminate\Validation\ValidationException
