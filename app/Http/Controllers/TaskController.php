@@ -1,23 +1,17 @@
 <?php
 
+
+
 namespace App\Http\Controllers;
 
 use App\Models\Task;
 use Illuminate\Http\Request;
 use App\Services\TaskService;
 use App\Http\Resources\TaskCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-
-/**
- * @OA\Info(
- *     description="API endpoints for managing tasks",
- *     version="1.0.0",
- *     title="Task API"
- * )
- */
 class TaskController extends Controller
 {
-
     protected $service;
 
     public function __construct(TaskService $taskService)
@@ -25,29 +19,36 @@ class TaskController extends Controller
         $this->service = $taskService;
     }
 
-
-    public function show(int $id, int $paginate = 20)
+    /**
+     * @OA\Get(
+     *     path="/tasks/{id}",
+     *     summary="Get tasks by user ID and status",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="User ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="paginate",
+     *         in="query",
+     *         description="Pagination count",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=20)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="A list of tasks",
+     *         @OA\JsonContent(ref="#/components/schemas/TaskCollection")
+     *     )
+     * )
+     */
+    public function show(int $id, int $paginate = 20): JsonResource
     {
-        $tasks = $this->service->getTasksByOwner($id, $paginate);
+        $tasks = $this->service->getTasksByUserIdAndStatus($id, Task::PENDING);
         return new TaskCollection($tasks);
     }
-
-
-
-    public function filter(int $id, int $paginate = 20)
-    {
-        $filters = [
-            'title' => 'Important',
-            'due_at' => '2023-05-15',
-            'for' => 'staff',
-            'sort_column' => 'due_at',
-            'sort_direction' => 'desc',
-        ];
-        $tasks = $$this->service->getTasksWithFilters($id, $filters, $paginate);
-        return new TaskCollection($tasks);
-    }
-
-
 
 
 }

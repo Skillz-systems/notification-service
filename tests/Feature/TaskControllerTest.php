@@ -19,68 +19,37 @@ class TaskControllerTest extends TestCase
         parent::setUp();
         $this->user = User::factory()->create();
     }
-    public function test_to_show_tasks_by_owner()
+    public function test_to_show_tasks_by_user_id()
     {
 
         $this->actingAsAuthenticatedTestUser();
 
-        $owner = User::factory()->create();
-        Task::factory()->count(5)->create(['owner_id' => $this->user->id, 'for' => 'staff']);
+        Task::factory(['user_id' => $this->user->id, 'task_status' => 0])->create();
+
         $response = $this->getJson('/api/tasks/' . $this->user->id);
 
         $response->assertStatus(200);
-        // $response->assertJsonCount(5, 'data');
-        // $response->assertJsonStructure([
-        //     'data' => [
-        //         '*' => [
-        //             'id',
-        //             'title',
-        //             'description',
-        //             'due_at',
-        //             'status',
-        //             'owner_id',
-        //             'created_at',
-        //             'updated_at',
-        //         ]
-        //     ]
-        // ]);
+    }
+    public function test_unauthenticated_cannot_show_tasks_by_user_id()
+    {
+
+        $this->actingAsUnAuthenticatedTestUser();
+
+        Task::factory(['user_id' => $this->user->id, 'task_status' => 0])->create();
+
+        $response = $this->getJson('/api/tasks/' . $this->user->id);
+
+        $response->assertStatus(401);
+    }
+    public function test_it_can_show_tasks_for_a_user()
+    {
+        $this->actingAsAuthenticatedTestUser();
+        Task::factory(['user_id' => $this->user->id, 'task_status' => Task::PENDING])->count(5)->create();
+        Task::factory(['user_id' => $this->user->id, 'task_status' => Task::DONE])->count(5)->create();
+        $response = $this->getJson('/api/tasks/' . $this->user->id);
+        $response->assertStatus(200)
+            ->assertJsonStructure(['data' => [['id', 'title', 'route', 'start_time', 'end_time', 'task_status']]]);
+        $this->assertCount(5, $response->json('data'));
     }
 
-    // public function testFilterTasks()
-    // {
-    //     $this->actingAsAuthenticatedTestUser();
-    //     // $owner = User::factory()->create();
-    //     $tasks = Task::factory()->count(10)->create([
-    //         'owner_id' => $this->user->id,
-    //         'title' => 'Important',
-    //         'due_at' => '2023-05-15',
-    //     ]);
-
-    //     $filters = [
-    //         'title' => 'Important',
-    //         'due_at' => '2023-05-15',
-    //         'for' => 'staff',
-    //         'sort_column' => 'due_at',
-    //         'sort_direction' => 'desc',
-    //     ];
-
-    //     $response = $this->getJson(route('tasks.filter', ['id' => $this->user->id, 'filters' => $filters]));
-
-    //     $response->assertStatus(200);
-    //     // $response->assertJsonCount(10, 'data');
-    //     // $response->assertJsonStructure([
-    //     //     'data' => [
-    //     //         '*' => [
-    //     //             'id',
-    //     //             'title',
-    //     //             'description',
-    //     //             'due_at',
-    //     //             'status',
-    //     //             'owner_id',
-    //     //             'created_at',
-    //     //             'updated_at',
-    //     //         ]
-    //     //     ]
-    //     // ]);
-    // }
 }
