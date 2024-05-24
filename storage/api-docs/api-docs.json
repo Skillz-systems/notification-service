@@ -80,9 +80,6 @@
                     "end_time": {
                         "type": "string",
                         "format": "date"
-                    },
-                    "task_status": {
-                        "type": "boolean"
                     }
                 },
                 "type": "object"

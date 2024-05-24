@@ -13,8 +13,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
  *     @OA\Property(property="title", type="string"),
  *     @OA\Property(property="route", type="string"),
  *     @OA\Property(property="start_time", type="date"),
- *     @OA\Property(property="end_time", type="date"),
- *     @OA\Property(property="task_status", type="boolean")
+ *     @OA\Property(property="end_time", type="date")
  * )
  */
 class TaskCollection extends ResourceCollection
