@@ -10,6 +10,11 @@ use App\Services\TaskService;
 use App\Http\Resources\TaskCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @OA\Tag(name="Tasks")
+ */
+
+
 class TaskController extends Controller
 {
     protected $service;
@@ -40,10 +45,27 @@ class TaskController extends Controller
      *     @OA\Response(
      *         response=200,
      *         description="A list of tasks",
-     *         @OA\JsonContent(ref="#/components/schemas/TaskCollection")
+     *         @OA\JsonContent(ref="#/components/schemas/TaskCollection"),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not Found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server Error"
      *     )
      * )
      */
+
     public function show(int $id, int $paginate = 20): JsonResource
     {
         $tasks = $this->service->getTasksByUserIdAndStatus($id, Task::PENDING);

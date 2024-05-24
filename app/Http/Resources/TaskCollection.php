@@ -5,8 +5,24 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
+/**
+ * @OA\Schema(
+ *     schema="TaskCollection",
+ *     @OA\Property(property="id", type="integer"),
+ *     @OA\Property(property="user_id", type="string"),
+ *     @OA\Property(property="title", type="string"),
+ *     @OA\Property(property="route", type="string"),
+ *     @OA\Property(property="start_time", type="date"),
+ *     @OA\Property(property="end_time", type="date"),
+ *     @OA\Property(property="task_status", type="boolean")
+ * )
+ */
 class TaskCollection extends ResourceCollection
 {
+
+
+
+
     /**
      * Transform the resource collection into an array.
      *
@@ -25,20 +41,11 @@ class TaskCollection extends ResourceCollection
                     'route' => $task->route,
                     'start_time' => $task->start_time,
                     'end_time' => $task->end_time,
-                    'task_status' => (boolean) $task->task_status,
+                    // 'task_status' => (boolean) $task->task_status,
                 ];
             }),
         ];
-        // return [
-        //     'data' => $this->collection,
-        //     'meta' => [
-        //         'total' => $this->total(),
-        //         'count' => $this->count(),
-        //         'per_page' => $this->perPage(),
-        //         'current_page' => $this->currentPage(),
-        //         'total_pages' => $this->lastPage(),
-        //     ],
-        // ];
+
     }
 
 
