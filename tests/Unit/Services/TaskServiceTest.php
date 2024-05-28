@@ -4,6 +4,7 @@ use Tests\TestCase;
 use App\Models\Task;
 use App\Models\User;
 use App\Services\TaskService;
+use App\Http\Resources\TaskCollection;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;

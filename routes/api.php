@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\TaskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +17,8 @@ use App\Http\Controllers\TestController;
 
 
 Route::middleware('scope.user')->group(function () {
+    Route::get('/tasks/{id}', [TaskController::class, 'show']);
+    Route::get('/tasks/filters/{id}', [TaskController::class, 'filter']);
     Route::get('/protected', function () {
         return response()->json(['message' => 'Access granted']);
     });

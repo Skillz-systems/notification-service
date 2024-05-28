@@ -1,65 +1,76 @@
 <?php
 
+
+
 namespace App\Http\Controllers;
 
 use App\Models\Task;
 use Illuminate\Http\Request;
+use App\Services\TaskService;
+use App\Http\Resources\TaskCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+/**
+ * @OA\Tag(name="Tasks")
+ */
+
 
 class TaskController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    protected $service;
+
+    public function __construct(TaskService $taskService)
     {
-        //
+        $this->service = $taskService;
     }
 
     /**
-     * Show the form for creating a new resource.
+     * @OA\Get(
+     *     path="/tasks/{id}",
+     *     summary="Get tasks by user ID and status",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="User ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="paginate",
+     *         in="query",
+     *         description="Pagination count",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=20)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="A list of tasks",
+     *         @OA\JsonContent(ref="#/components/schemas/TaskCollection"),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not Found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server Error"
+     *     )
+     * )
      */
-    public function create()
+
+    public function show(int $id, int $paginate = 20): JsonResource
     {
-        //
+        $tasks = $this->service->getTasksByUserIdAndStatus($id, Task::PENDING);
+        return new TaskCollection($tasks);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Task $task)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Task $task)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Task $task)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Task $task)
-    {
-        //
-    }
 }

@@ -6,6 +6,7 @@ use App\Models\Task;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * TaskService is a class that provides functionality for managing tasks.
@@ -68,7 +69,7 @@ class TaskService
      * @param int $userId
      * @return Collection|null
      */
-    public function getTasksByUserId(int $userId): ?Collection
+    public function getTasksByUserId(int $userId, ): ?Collection
     {
         return Task::where('user_id', $userId)->get();
     }
@@ -86,7 +87,6 @@ class TaskService
             ->where('task_status', $status)
             ->get();
     }
-
     /**
      * Validate the data for updating a task.
      *
