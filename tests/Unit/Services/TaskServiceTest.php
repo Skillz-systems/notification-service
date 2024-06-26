@@ -1,9 +1,9 @@
 <?php
 
 use Tests\TestCase;
-use App\Models\Task;
+use App\Models\NotificationTask;
 use App\Models\User;
-use App\Services\TaskService;
+use App\Services\NotificationTaskService;
 use App\Http\Resources\TaskCollection;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Validation\ValidationException;
@@ -13,7 +13,7 @@ class TaskServiceTest extends TestCase
 {
     use RefreshDatabase;
 
-    private TaskService $service;
+    private NotificationTaskService $service;
 
     protected $user;
 
@@ -22,7 +22,7 @@ class TaskServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new TaskService();
+        $this->service = new NotificationTaskService();
         $this->user = User::factory()->create();
     }
 
@@ -48,7 +48,7 @@ class TaskServiceTest extends TestCase
 
         $task = $this->service->create($request);
 
-        $this->assertInstanceOf(Task::class, $task);
+        $this->assertInstanceOf(NotificationTask::class, $task);
         $this->assertEquals(1, $task->processflow_history_id);
         $this->assertEquals(2, $task->formbuilder_data_id);
         $this->assertEquals(3, $task->entity_id);
@@ -66,7 +66,7 @@ class TaskServiceTest extends TestCase
     public function test_task_service_update_valid_task()
     {
 
-        $task = Task::factory(['user_id' => $this->user->id])->create();
+        $task = NotificationTask::factory(['user_id' => $this->user->id])->create();
 
         $request = [
             'id' => $task->id,
@@ -91,10 +91,10 @@ class TaskServiceTest extends TestCase
 
     public function test_task_service_destroy_task()
     {
-        $task = Task::factory(['user_id' => $this->user->id])->create();
+        $task = NotificationTask::factory(['user_id' => $this->user->id])->create();
         $deleted = $this->service->destroy($task->id);
         $this->assertTrue($deleted);
-        $this->assertNull(Task::find($task->id));
+        $this->assertNull(NotificationTask::find($task->id));
     }
 
     public function test_task_service_validate_create_data_valid_data()

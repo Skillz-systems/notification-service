@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Models\Task;
+use App\Models\NotificationTask;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Artisan;
@@ -15,21 +15,21 @@ class SendTasksReminderNotifierTest extends TestCase
 
     public function test_send_task_reminder_command()
     {
-        $taskPending = Task::factory([
+        $taskPending = NotificationTask::factory([
             'user_id' => $this->user()->id,
             'task_status' => 0,
             'start_time' => Carbon::now()->subHours(10),
             'end_time' => Carbon::now()->addHours(2),
         ])->create();
 
-        $taskCompleted = Task::factory([
+        $taskCompleted = NotificationTask::factory([
             'user_id' => $this->user()->id,
             'task_status' => 1,
             'start_time' => Carbon::now()->subHours(12),
             'end_time' => Carbon::now()->addHours(4),
         ])->create();
 
-        $taskOutsideTimeRange = Task::factory([
+        $taskOutsideTimeRange = NotificationTask::factory([
             'user_id' => $this->user()->id,
             'task_status' => 0,
             'start_time' => Carbon::now()->subHours(6),
@@ -40,17 +40,17 @@ class SendTasksReminderNotifierTest extends TestCase
             ->expectsOutput("Sending reminder for task: {$taskPending->title}")
             ->assertSuccessful();
 
-        $this->assertDatabaseHas('tasks', [
+        $this->assertDatabaseHas('notification_tasks', [
             'id' => $taskPending->id,
             'task_status' => 0,
         ]);
 
-        $this->assertDatabaseHas('tasks', [
+        $this->assertDatabaseHas('notification_tasks', [
             'id' => $taskCompleted->id,
             'task_status' => 1,
         ]);
 
-        $this->assertDatabaseHas('tasks', [
+        $this->assertDatabaseHas('notification_tasks', [
             'id' => $taskOutsideTimeRange->id,
             'task_status' => 0,
         ]);

@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Task;
+use App\Models\NotificationTask;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\ValidationException;
@@ -11,29 +11,29 @@ use Illuminate\Pagination\LengthAwarePaginator;
 /**
  * TaskService is a class that provides functionality for managing tasks.
  */
-class TaskService
+class NotificationTaskService
 {
     /**
      * Get a task by its ID.
      *
      * @param int $id
-     * @return Task|null
+     * @return NotificationTask|null
      */
-    public function show(int $id): ?Task
+    public function show(int $id): ?NotificationTask
     {
-        return Task::findOrFail($id);
+        return NotificationTask::findOrFail($id);
     }
 
     /**
      * Create a new task.
      *
      * @param array $request
-     * @return Task|null
+     * @return NotificationTask|null
      */
-    public function create(array $request): ?Task
+    public function create(array $request): ?NotificationTask
     {
         $validatedData = $this->validateCreateData($request);
-        $task = Task::create($validatedData);
+        $task = NotificationTask::create($validatedData);
         return $task;
     }
 
@@ -47,7 +47,7 @@ class TaskService
     public function update(array $request, int $id): ?bool
     {
         $validatedData = $this->validateUpdateData($request);
-        $task = Task::findOrFail($id);
+        $task = NotificationTask::findOrFail($id);
         return $task->update($validatedData);
     }
 
@@ -71,7 +71,7 @@ class TaskService
      */
     public function getTasksByUserId(int $userId, ): ?Collection
     {
-        return Task::where('user_id', $userId)->get();
+        return NotificationTask::where('user_id', $userId)->get();
     }
 
     /**
@@ -83,7 +83,7 @@ class TaskService
      */
     public function getTasksByUserIdAndStatus($userId, $status)
     {
-        return Task::where('user_id', $userId)
+        return NotificationTask::where('user_id', $userId)
             ->where('task_status', $status)
             ->get();
     }

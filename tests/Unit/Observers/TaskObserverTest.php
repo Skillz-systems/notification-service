@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Observers;
 
-use App\Models\Task;
+use App\Models\NotificationTask;
 use App\Observers\TaskObserver;
-use App\Services\TaskAutomator;
+use App\Services\NotificationTaskAutomator;
 use Mockery;
 use Tests\TestCase;
 
@@ -17,13 +17,13 @@ class TaskObserverTest extends TestCase
     {
         parent::setUp();
 
-        $this->taskAutomator = Mockery::mock(TaskAutomator::class);
+        $this->taskAutomator = Mockery::mock(NotificationTaskAutomator::class);
         $this->taskObserver = new TaskObserver($this->taskAutomator);
     }
 
     public function test_observer_task_automator_run_when_task_is_created_with_pending_task_status(): void
     {
-        $task = new Task(['task_status' => Task::PENDING]);
+        $task = new NotificationTask(['task_status' => NotificationTask::PENDING]);
 
         $this->taskAutomator->shouldReceive('send')
             ->once()
@@ -34,7 +34,7 @@ class TaskObserverTest extends TestCase
 
     public function test_observer_task_automator_does_not_run_when_task_is_created_or_updated_with_completed_task_status(): void
     {
-        $task = new Task(['task_status' => Task::DONE]);
+        $task = new NotificationTask(['task_status' => NotificationTask::DONE]);
 
         $this->taskAutomator->shouldNotReceive('send');
 

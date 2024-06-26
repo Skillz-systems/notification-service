@@ -4,9 +4,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Task;
+use App\Models\NotificationTask;
 use Illuminate\Http\Request;
-use App\Services\TaskService;
+use App\Services\NotificationTaskService;
 use App\Http\Resources\TaskCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -19,7 +19,7 @@ class TaskController extends Controller
 {
     protected $service;
 
-    public function __construct(TaskService $taskService)
+    public function __construct(NotificationTaskService $taskService)
     {
         $this->service = $taskService;
     }
@@ -68,7 +68,7 @@ class TaskController extends Controller
 
     public function show(int $id, int $paginate = 20): JsonResource
     {
-        $tasks = $this->service->getTasksByUserIdAndStatus($id, Task::PENDING);
+        $tasks = $this->service->getTasksByUserIdAndStatus($id, NotificationTask::PENDING);
         return new TaskCollection($tasks);
     }
 

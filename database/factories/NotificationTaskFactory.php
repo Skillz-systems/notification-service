@@ -8,9 +8,9 @@ use Database\Factories\NullableProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Task>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\NotificationTask>
  */
-class TaskFactory extends Factory
+class NotificationTaskFactory extends Factory
 {
 
     protected $providers = [

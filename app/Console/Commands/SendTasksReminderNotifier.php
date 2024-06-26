@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Task;
-use App\Services\TaskAutomator;
+use App\Models\NotificationTask;
+use App\Services\NotificationTaskAutomator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -40,7 +40,7 @@ class SendTasksReminderNotifier extends Command
 
         try {
             // Resolve the TaskAutomator service from the container
-            $taskAutomator = app()->make(TaskAutomator::class);
+            $taskAutomator = app()->make(NotificationTaskAutomator::class);
         } catch (BindingResolutionException $e) {
             // Log the error and display a message if the TaskAutomator service cannot be resolved
             Log::error('Failed to resolve TaskAutomator: ' . $e->getMessage());
@@ -54,7 +54,7 @@ class SendTasksReminderNotifier extends Command
         // Retrieve pending tasks where the start time is at least 8 hours before the current time
         // and the end time is greater than or equal to the current time
 
-        $pendingTasks = Task::where('task_status', Task::PENDING)
+        $pendingTasks = NotificationTask::where('task_status', NotificationTask::PENDING)
             ->whereDate('start_time', '<=', now()->subHours(8))
             ->whereDate('end_time', '>=', now());
 
