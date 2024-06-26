@@ -10,7 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('tasks', function (Blueprint $table) {
+        Schema::create('notification_tasks', function (Blueprint $table) {
             $table->bigInteger('id')->primary();
             $table->integer("processflow_history_id")->nullable()->comment("This column would hold the processflow history id, which comes from processflow service");
             $table->integer("formbuilder_data_id")->nullable()->comment("This column would hold the formbuilder data id, which can comes from processflow service or from formbuilder service");
@@ -33,6 +33,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('tasks');
+        Schema::dropIfExists('notification_tasks');
     }
 };

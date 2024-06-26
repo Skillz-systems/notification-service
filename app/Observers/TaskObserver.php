@@ -2,8 +2,8 @@
 
 namespace App\Observers;
 
-use App\Models\Task;
-use App\Services\TaskAutomator;
+use App\Models\NotificationTask;
+use App\Services\NotificationTaskAutomator;
 
 /**
  * TaskObserver is an observer class for handling task events.
@@ -11,16 +11,16 @@ use App\Services\TaskAutomator;
 class TaskObserver
 {
     /**
-     * @var TaskAutomator
+     * @var NotificationTaskAutomator
      */
     protected $taskAutomator;
 
     /**
      * Constructor for TaskObserver.
      *
-     * @param TaskAutomator $taskAutomator
+     * @param NotificationTaskAutomator $taskAutomator
      */
-    public function __construct(TaskAutomator $taskAutomator)
+    public function __construct(NotificationTaskAutomator $taskAutomator)
     {
         $this->taskAutomator = $taskAutomator;
     }
@@ -28,12 +28,12 @@ class TaskObserver
     /**
      * Handle the Task "created" event.
      *
-     * @param Task $task
+     * @param NotificationTask $task
      * @return void
      */
-    public function created(Task $task): void
+    public function created(NotificationTask $task): void
     {
-        if ($task->task_status === Task::PENDING) {
+        if ($task->task_status === NotificationTask::PENDING) {
             $this->taskAutomator->send($task->toArray());
         }
     }
@@ -41,12 +41,12 @@ class TaskObserver
     /**
      * Handle the Task "updated" event.
      *
-     * @param Task $task
+     * @param NotificationTask $task
      * @return void
      */
-    public function updated(Task $task): void
+    public function updated(NotificationTask $task): void
     {
-        if ($task->task_status === Task::PENDING) {
+        if ($task->task_status === NotificationTask::PENDING) {
             $this->taskAutomator->send($task->toArray());
         }
     }

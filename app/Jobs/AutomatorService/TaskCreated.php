@@ -2,7 +2,7 @@
 
 namespace App\Jobs\AutomatorService;
 
-use App\Services\TaskService;
+use App\Services\NotificationTaskService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -26,7 +26,7 @@ class TaskCreated implements ShouldQueue
 
     public function handle(): void
     {
-        $service = new TaskService();
+        $service = new NotificationTaskService();
         $task = $service->show($this->id);
 
         if (!$task) {

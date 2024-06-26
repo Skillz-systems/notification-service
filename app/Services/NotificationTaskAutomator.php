@@ -11,7 +11,7 @@ use App\Jobs\CommunicationsService\EmailJob;
 /**
  * TaskAutomator is a service class responsible for automating tasks and sending notifications.
  */
-class TaskAutomator
+class NotificationTaskAutomator
 {
     /**
      * @var UserService
